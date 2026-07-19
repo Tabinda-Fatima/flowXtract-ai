@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LogoIcon } from "@/components/LogoIcon";
+import { Logo } from "@/components/Logo";
 import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/extract")({
@@ -30,13 +30,8 @@ function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <Link
-          to="/"
-          className="flex items-center gap-2 font-bold"
-          style={{ color: BRAND }}
-        >
-          <LogoIcon className="h-6 w-6" />
-          flowXtract
+        <Link to="/" style={{ color: BRAND }}>
+          <Logo iconClassName="h-5 w-5" />
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           <a href="/#features" className={link}>Features</a>
@@ -167,10 +162,7 @@ function Footer() {
     <footer className="bg-slate-50 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-4 gap-10">
         <div>
-          <div className="flex items-center gap-2 font-bold" style={{ color: BRAND }}>
-            <LogoIcon className="h-6 w-6" />
-            flowXtract
-          </div>
+          <Logo style={{ color: BRAND }} iconClassName="h-5 w-5" />
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
             Precision data extraction for the modern web.
           </p>
