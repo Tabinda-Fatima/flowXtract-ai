@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LogoIcon } from "@/components/LogoIcon";
 import { useState } from "react";
 import {
   User,
@@ -54,7 +55,7 @@ function Nav() {
           className="flex items-center gap-2 font-bold text-[color:var(--brand)]"
           style={{ ["--brand" as never]: BRAND }}
         >
-          <span className="inline-block h-6 w-6 rounded bg-[color:var(--brand)]/10 border border-[color:var(--brand)]/30" />
+          <LogoIcon className="h-6 w-6" />
           flowXtract
         </button>
         <nav className="hidden md:flex items-center gap-8">
@@ -350,7 +351,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-10">
         <div>
           <div className="flex items-center gap-2 font-bold" style={{ color: BRAND }}>
-            <span className="inline-block h-6 w-6 rounded bg-[color:var(--brand)]/10 border border-[color:var(--brand)]/30" style={{ ["--brand" as never]: BRAND }} />
+            <LogoIcon className="h-6 w-6" />
             flowXtract
           </div>
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">

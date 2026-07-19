@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LogoIcon } from "@/components/LogoIcon";
 import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/extract")({
@@ -34,10 +35,7 @@ function Nav() {
           className="flex items-center gap-2 font-bold"
           style={{ color: BRAND }}
         >
-          <span
-            className="inline-block h-6 w-6 rounded border"
-            style={{ backgroundColor: `${BRAND}15`, borderColor: `${BRAND}4d` }}
-          />
+          <LogoIcon className="h-6 w-6" />
           flowXtract
         </Link>
         <nav className="hidden md:flex items-center gap-8">
@@ -170,6 +168,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-4 gap-10">
         <div>
           <div className="flex items-center gap-2 font-bold" style={{ color: BRAND }}>
+            <LogoIcon className="h-6 w-6" />
             flowXtract
           </div>
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
