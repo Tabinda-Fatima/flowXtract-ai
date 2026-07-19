@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LogoIcon } from "@/components/LogoIcon";
 import { useState } from "react";
 import {
   User,
