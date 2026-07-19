@@ -52,11 +52,10 @@ function Nav() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <button
           onClick={() => scrollTo("top")}
-          className="flex items-center gap-2 font-bold text-[color:var(--brand)]"
+          className="text-[color:var(--brand)]"
           style={{ ["--brand" as never]: BRAND }}
         >
-          <LogoIcon className="h-6 w-6" />
-          flowXtract
+          <Logo iconClassName="h-5 w-5" />
         </button>
         <nav className="hidden md:flex items-center gap-8">
           <button onClick={() => scrollTo("features")} className={link}>Features</button>
@@ -350,10 +349,7 @@ function Footer() {
     <footer className="bg-slate-50 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-10">
         <div>
-          <div className="flex items-center gap-2 font-bold" style={{ color: BRAND }}>
-            <LogoIcon className="h-6 w-6" />
-            flowXtract
-          </div>
+          <Logo style={{ color: BRAND }} iconClassName="h-5 w-5" />
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
             Precision data extraction for the modern web. Turn any website into structured intelligence in minutes with AI.
           </p>
