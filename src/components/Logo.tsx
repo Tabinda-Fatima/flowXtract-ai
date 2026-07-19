@@ -1,12 +1,16 @@
+import type { CSSProperties } from "react";
+
 export function Logo({
   className,
   iconClassName,
+  style,
 }: {
   className?: string;
   iconClassName?: string;
+  style?: CSSProperties;
 }) {
   return (
-    <div className={`flex items-center gap-1.5 ${className || ""}`}>
+    <div className={`flex items-center gap-1.5 ${className || ""}`} style={style}>
       <svg
         viewBox="0 0 20 20"
         fill="none"
