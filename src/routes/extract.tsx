@@ -31,7 +31,7 @@ function Nav() {
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link to="/" style={{ color: BRAND }}>
-          <Logo iconClassName="h-5 w-5" />
+          <Logo imgClassName="h-7 w-auto" />
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           <a href="/#features" className={link}>Features</a>
@@ -162,7 +162,7 @@ function Footer() {
     <footer className="bg-slate-50 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-4 gap-10">
         <div>
-          <Logo style={{ color: BRAND }} iconClassName="h-5 w-5" />
+          <Logo imgClassName="h-9 w-auto" />
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
             Precision data extraction for the modern web.
           </p>

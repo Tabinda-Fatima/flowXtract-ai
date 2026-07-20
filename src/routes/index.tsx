@@ -55,7 +55,7 @@ function Nav() {
           className="text-[color:var(--brand)]"
           style={{ ["--brand" as never]: BRAND }}
         >
-          <Logo iconClassName="h-5 w-5" />
+          <Logo imgClassName="h-7 w-auto" />
         </button>
         <nav className="hidden md:flex items-center gap-8">
           <button onClick={() => scrollTo("features")} className={link}>Features</button>
@@ -349,7 +349,7 @@ function Footer() {
     <footer className="bg-slate-50 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-10">
         <div>
-          <Logo style={{ color: BRAND }} iconClassName="h-5 w-5" />
+          <Logo imgClassName="h-9 w-auto" />
           <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
             Precision data extraction for the modern web. Turn any website into structured intelligence in minutes with AI.
           </p>
