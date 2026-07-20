@@ -54,83 +54,186 @@ function Nav() {
 }
 
 function ExtractForm() {
+  const [url, setUrl] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState<{ url?: string; description?: string; email?: string }>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+
+  function validate() {
+    const e: { url?: string; description?: string; email?: string } = {};
+    if (!url.trim()) e.url = "Website URL is required.";
+    else if (!/^https?:\/\//i.test(url.trim())) e.url = "URL must start with http:// or https://.";
+    if (!description.trim()) e.description = "Please describe the data you want to extract.";
+    if (!email.trim()) e.email = "Email address is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = "Please enter a valid email address.";
+    return e;
+  }
+
+  async function onSubmit(ev: FormEvent) {
+    ev.preventDefault();
+    if (submitting) return;
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length > 0) return;
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify({ url: url.trim(), description: description.trim(), email: email.trim() }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setSubmittedEmail(email.trim());
+    } catch {
+      setSubmitError("Unable to submit your request. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function resetForm() {
+    setUrl("");
+    setDescription("");
+    setEmail("");
+    setErrors({});
+    setSubmitError(null);
+    setSubmittedEmail(null);
+  }
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50">
       <div className="mx-auto max-w-3xl px-6 py-16 md:py-20">
-        <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-            Start Your Data Extraction
-          </h1>
-          <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Enter a public website URL, describe the information you need, and provide your email address.
-          </p>
-        </div>
-
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="mt-10 rounded-2xl bg-white border border-slate-200 shadow-lg p-6 md:p-8 space-y-6"
-        >
-          <div>
-            <label htmlFor="url" className="text-xs font-bold tracking-wider text-slate-700">
-              WEBSITE URL
-            </label>
-            <div className="mt-2 flex items-center gap-2 rounded-md border border-slate-200 px-3 focus-within:border-slate-400 bg-white">
-              <LinkIcon className="h-4 w-4 text-slate-400" />
-              <input
-                id="url"
-                type="url"
-                placeholder="https://example.com"
-                className="w-full bg-transparent py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
-              />
+        {submittedEmail ? (
+          <div className="rounded-2xl bg-white border border-slate-200 shadow-lg p-8 md:p-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50">
+              <CheckCircle2 className="h-8 w-8" style={{ color: BRAND }} />
             </div>
+            <h1 className="mt-6 text-2xl md:text-3xl font-bold text-slate-900">
+              Extraction Request Submitted
+            </h1>
+            <p className="mt-3 text-slate-600 max-w-xl mx-auto">
+              Your request has been received. We'll send the completed Google Sheet to your email once processing is complete.
+            </p>
+            <p className="mt-4 text-sm text-slate-700">
+              Confirmation will be sent to <span className="font-semibold">{submittedEmail}</span>
+            </p>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition"
+              style={{ backgroundColor: BRAND }}
+            >
+              Submit Another Request
+            </button>
           </div>
-
-          <div>
-            <label htmlFor="desc" className="text-xs font-bold tracking-wider text-slate-700">
-              WHAT DATA DO YOU WANT TO EXTRACT?
-            </label>
-            <textarea
-              id="desc"
-              rows={4}
-              placeholder="Example: Extract product names, prices, ratings and availability."
-              className="mt-2 w-full resize-none rounded-md border border-slate-200 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 bg-white"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="text-xs font-bold tracking-wider text-slate-700">
-              EMAIL ADDRESS
-            </label>
-            <div className="mt-2 flex items-center gap-2 rounded-md border border-slate-200 px-3 focus-within:border-slate-400 bg-white">
-              <Mail className="h-4 w-4 text-slate-400" />
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                className="w-full bg-transparent py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
-              />
+        ) : (
+          <>
+            <div className="text-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+                Start Your Data Extraction
+              </h1>
+              <p className="mt-3 text-slate-600 max-w-xl mx-auto">
+                Enter a public website URL, describe the information you need, and provide your email address.
+              </p>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full inline-flex items-center justify-center gap-2 rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition"
-            style={{ backgroundColor: BRAND }}
-          >
-            Start AI Extraction <Zap className="h-4 w-4" />
-          </button>
+            <form
+              onSubmit={onSubmit}
+              noValidate
+              className="mt-10 rounded-2xl bg-white border border-slate-200 shadow-lg p-6 md:p-8 space-y-6"
+            >
+              <div>
+                <label htmlFor="url" className="text-xs font-bold tracking-wider text-slate-700">
+                  WEBSITE URL
+                </label>
+                <div className={`mt-2 flex items-center gap-2 rounded-md border px-3 focus-within:border-slate-400 bg-white ${errors.url ? "border-red-400" : "border-slate-200"}`}>
+                  <LinkIcon className="h-4 w-4 text-slate-400" />
+                  <input
+                    id="url"
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://example.com"
+                    className="w-full bg-transparent py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+                  />
+                </div>
+                {errors.url && <p className="mt-1.5 text-xs text-red-600">{errors.url}</p>}
+              </div>
 
-          <div className="border-t border-slate-200 pt-4 space-y-2">
-            <p className="flex items-start gap-2 text-xs text-slate-600">
-              <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-              We'll send the completed Google Sheet to your email once processing is complete.
-            </p>
-            <p className="flex items-start gap-2 text-xs italic text-slate-500">
-              <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-              Your email will only be used to deliver your extraction results.
-            </p>
-          </div>
-        </form>
+              <div>
+                <label htmlFor="desc" className="text-xs font-bold tracking-wider text-slate-700">
+                  WHAT DATA DO YOU WANT TO EXTRACT?
+                </label>
+                <textarea
+                  id="desc"
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Example: Extract product names, prices, ratings and availability."
+                  className={`mt-2 w-full resize-none rounded-md border px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 bg-white ${errors.description ? "border-red-400" : "border-slate-200"}`}
+                />
+                {errors.description && <p className="mt-1.5 text-xs text-red-600">{errors.description}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="email" className="text-xs font-bold tracking-wider text-slate-700">
+                  EMAIL ADDRESS
+                </label>
+                <div className={`mt-2 flex items-center gap-2 rounded-md border px-3 focus-within:border-slate-400 bg-white ${errors.email ? "border-red-400" : "border-slate-200"}`}>
+                  <Mail className="h-4 w-4 text-slate-400" />
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full bg-transparent py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+                  />
+                </div>
+                {errors.email && <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
+              </div>
+
+              {submitError && (
+                <p className="text-sm text-red-600 text-center" role="alert">{submitError}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
+                style={{ backgroundColor: BRAND }}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Submitting Request...
+                  </>
+                ) : (
+                  <>
+                    Start AI Extraction <Zap className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+
+              <div className="border-t border-slate-200 pt-4 space-y-2">
+                <p className="flex items-start gap-2 text-xs text-slate-600">
+                  <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+                  We'll send the completed Google Sheet to your email once processing is complete.
+                </p>
+                <p className="flex items-start gap-2 text-xs italic text-slate-500">
+                  <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+                  Your email will only be used to deliver your extraction results.
+                </p>
+              </div>
+            </form>
+          </>
+        )}
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
           <span className="inline-flex items-center gap-1.5">
