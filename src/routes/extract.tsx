@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { Logo } from "@/components/Logo";
-import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles } from "lucide-react";
+import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
+
+const WEBHOOK_URL = "https://nathaly-extinguishable-adriene.ngrok-free.dev/webhook-test/dataextract-ai";
 
 export const Route = createFileRoute("/extract")({
   head: () => ({
