@@ -160,10 +160,14 @@ function ExtractForm() {
                     type="url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://example.com"
+                    placeholder="Example: https://example.com/products"
                     className="w-full bg-transparent py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
                   />
                 </div>
+                <p className="mt-1.5 flex items-start gap-1.5 text-xs text-slate-500">
+                  <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                  Paste the page that contains the actual listings, products, jobs, properties, or articles you want to extract. A homepage may not contain the required data.
+                </p>
                 {errors.url && <p className="mt-1.5 text-xs text-red-600">{errors.url}</p>}
               </div>
 
