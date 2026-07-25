@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { Logo } from "@/components/Logo";
 import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
 
-const WEBHOOK_URL = "https://nathaly-extinguishable-adriene.ngrok-free.dev/webhook-test/dataextract-ai";
+const WEBHOOK_URL = "https://haseebtabi01.app.n8n.cloud/webhook/dataextract-ai";
 
 export const Route = createFileRoute("/extract")({
   head: () => ({
