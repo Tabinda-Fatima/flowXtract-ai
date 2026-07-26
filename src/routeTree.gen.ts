@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ExtractRouteImport } from './routes/extract'
+import { Route as DocumentationRouteImport } from './routes/documentation'
 import { Route as IndexRouteImport } from './routes/index'
 
 const FeaturesRoute = FeaturesRouteImport.update({
@@ -23,6 +24,11 @@ const ExtractRoute = ExtractRouteImport.update({
   path: '/extract',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocumentationRoute = DocumentationRouteImport.update({
+  id: '/documentation',
+  path: '/documentation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/documentation': typeof DocumentationRoute
   '/extract': typeof ExtractRoute
   '/features': typeof FeaturesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/documentation': typeof DocumentationRoute
   '/extract': typeof ExtractRoute
   '/features': typeof FeaturesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/documentation': typeof DocumentationRoute
   '/extract': typeof ExtractRoute
   '/features': typeof FeaturesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/extract' | '/features'
+  fullPaths: '/' | '/documentation' | '/extract' | '/features'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/extract' | '/features'
-  id: '__root__' | '/' | '/extract' | '/features'
+  to: '/' | '/documentation' | '/extract' | '/features'
+  id: '__root__' | '/' | '/documentation' | '/extract' | '/features'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DocumentationRoute: typeof DocumentationRoute
   ExtractRoute: typeof ExtractRoute
   FeaturesRoute: typeof FeaturesRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExtractRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/documentation': {
+      id: '/documentation'
+      path: '/documentation'
+      fullPath: '/documentation'
+      preLoaderRoute: typeof DocumentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DocumentationRoute: DocumentationRoute,
   ExtractRoute: ExtractRoute,
   FeaturesRoute: FeaturesRoute,
 }
