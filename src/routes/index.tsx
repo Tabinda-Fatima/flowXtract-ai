@@ -86,7 +86,7 @@ function Hero() {
           >
             AI-POWERED WEB DATA EXTRACTION
           </span>
-          <h1 className="mt-6 text-5xl md:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
+          <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
             Turn Website Data Into an{" "}
             <span style={{ color: BRAND }}>Organized Google Sheet</span>
           </h1>
