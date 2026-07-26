@@ -142,3 +142,14 @@
     color: var(--color-foreground);
   }
 }
+
+/* Offset anchor scrolling for the sticky 4rem header */
+@layer base {
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}

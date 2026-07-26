@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useState } from "react";
 import {
   User,
@@ -49,7 +50,7 @@ function Nav() {
     "text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium";
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <button
           onClick={() => scrollTo("top")}
           className="text-[color:var(--brand)]"
@@ -64,8 +65,8 @@ function Nav() {
         </nav>
         <Link
           to="/extract"
-          className="rounded-md border-2 px-4 py-2 text-sm font-semibold transition-colors"
-          style={{ borderColor: BRAND, color: BRAND }}
+          className="shrink-0 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition"
+          style={{ backgroundColor: BRAND }}
         >
           Start Extraction
         </Link>
@@ -77,7 +78,7 @@ function Nav() {
 function Hero() {
   return (
     <section id="top" className="bg-slate-50 border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 md:py-20 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
         <div>
           <span
             className="inline-block rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider"
@@ -85,7 +86,7 @@ function Hero() {
           >
             AI-POWERED WEB DATA EXTRACTION
           </span>
-          <h1 className="mt-6 text-5xl md:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
+          <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
             Turn Website Data Into an{" "}
             <span style={{ color: BRAND }}>Organized Google Sheet</span>
           </h1>
@@ -192,11 +193,11 @@ function Audience() {
   ];
   return (
     <section className="bg-slate-50 py-20 border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionTitle>Who is flowXtract for?</SectionTitle>
         <div className="mt-12 grid md:grid-cols-3 gap-6">
           {items.map((it) => (
-            <div key={it.title} className="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
+            <div key={it.title} className="rounded-xl bg-white border border-slate-200 p-6 shadow-sm transition-shadow hover:shadow-md">
               <div
                 className="h-10 w-10 rounded-md flex items-center justify-center"
                 style={{ backgroundColor: `${BRAND}15`, color: BRAND }}
@@ -222,7 +223,7 @@ function Features() {
   ];
   return (
     <section id="features" className="bg-white py-20 border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
             From Website URL to Clean Spreadsheet
@@ -233,7 +234,7 @@ function Features() {
         </div>
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((it) => (
-            <div key={it.title} className="rounded-xl bg-white border border-slate-200 p-6 shadow-sm text-center">
+            <div key={it.title} className="rounded-xl bg-white border border-slate-200 p-6 shadow-sm text-center transition-shadow hover:shadow-md">
               <div
                 className="mx-auto h-12 w-12 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: `${BRAND}15`, color: BRAND }}
@@ -258,7 +259,7 @@ function HowItWorks() {
   ];
   return (
     <section id="how" className="py-16" style={{ backgroundColor: BRAND }}>
-      <div className="mx-auto max-w-7xl px-6 text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 text-white">
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold">Simple From Start to Finish</h2>
           <p className="mt-3 text-white/80">Three easy steps to your structured data.</p>
@@ -286,8 +287,8 @@ function HowItWorks() {
 function FinalCTA() {
   return (
     <section className="bg-slate-50 py-20">
-      <div className="mx-auto max-w-4xl px-6">
-        <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-12 text-center shadow-sm">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-8 md:p-12 text-center shadow-sm">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
             Spend Less Time Copying Data Manually
           </h2>
@@ -317,7 +318,7 @@ function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className="bg-slate-50 py-20">
-      <div className="mx-auto max-w-3xl px-6">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 text-center">
           Frequently Asked Questions
         </h2>
@@ -326,7 +327,7 @@ function FAQ() {
             <div key={f.q} className="rounded-lg border border-slate-200 bg-white shadow-sm">
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-5 py-4 text-left"
+                className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
               >
                 <span className="font-semibold text-slate-900">{f.q}</span>
                 <ChevronDown
@@ -344,38 +345,6 @@ function FAQ() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-slate-50 border-t border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-10">
-        <div>
-          <Logo imgClassName="h-9 w-auto" />
-          <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
-            Precision data extraction for the modern web. Turn any website into structured intelligence in minutes with AI.
-          </p>
-          <p className="mt-6 text-xs text-slate-500">© 2026 flowXtract. All rights reserved.</p>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">PRODUCT</h4>
-          <ul className="mt-4 space-y-2 text-sm" style={{ color: BRAND }}>
-            <li><a href="#features" onClick={(e) => { e.preventDefault(); scrollTo("features"); }} className="hover:opacity-70">Features</a></li>
-            <li><a href="#" className="hover:opacity-70">Pricing</a></li>
-            <li><a href="#" className="hover:opacity-70">API Access</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">SUPPORT</h4>
-          <ul className="mt-4 space-y-2 text-sm" style={{ color: BRAND }}>
-            <li><a href="#" className="hover:opacity-70">Documentation</a></li>
-            <li><a href="#" className="hover:opacity-70">Help Center</a></li>
-            <li><a href="#" className="hover:opacity-70">Contact Us</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 function Landing() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -388,7 +357,7 @@ function Landing() {
         <FinalCTA />
         <FAQ />
       </main>
-      <Footer />
+      <SiteFooter onScrollFeatures={() => scrollTo("features")} />
     </div>
   );
 }
