@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useState } from "react";
 import {
   User,
@@ -344,38 +345,6 @@ function FAQ() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-slate-50 border-t border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-10">
-        <div>
-          <Logo imgClassName="h-9 w-auto" />
-          <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
-            Precision data extraction for the modern web. Turn any website into structured intelligence in minutes with AI.
-          </p>
-          <p className="mt-6 text-xs text-slate-500">© 2026 flowXtract. All rights reserved.</p>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">PRODUCT</h4>
-          <ul className="mt-4 space-y-2 text-sm" style={{ color: BRAND }}>
-            <li><a href="#features" onClick={(e) => { e.preventDefault(); scrollTo("features"); }} className="hover:opacity-70">Features</a></li>
-            <li><a href="#" className="hover:opacity-70">Pricing</a></li>
-            <li><a href="#" className="hover:opacity-70">API Access</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">SUPPORT</h4>
-          <ul className="mt-4 space-y-2 text-sm" style={{ color: BRAND }}>
-            <li><a href="#" className="hover:opacity-70">Documentation</a></li>
-            <li><a href="#" className="hover:opacity-70">Help Center</a></li>
-            <li><a href="#" className="hover:opacity-70">Contact Us</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 function Landing() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -388,7 +357,7 @@ function Landing() {
         <FinalCTA />
         <FAQ />
       </main>
-      <Footer />
+      <SiteFooter onScrollFeatures={() => scrollTo("features")} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Logo } from "@/components/Logo";
+import { SiteNav } from "@/components/SiteNav";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Link as LinkIcon, Mail, Zap, Info, Lock, ShieldCheck, Database, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
 
 const WEBHOOK_URL = "https://haseebtabi01.app.n8n.cloud/webhook/dataextract-ai";
@@ -26,32 +27,6 @@ export const Route = createFileRoute("/extract")({
 });
 
 const BRAND = "#1e40af";
-
-function Nav() {
-  const link =
-    "text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium";
-  return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <Link to="/" style={{ color: BRAND }}>
-          <Logo imgClassName="h-7 w-auto" />
-        </Link>
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="/#features" className={link}>Features</a>
-          <a href="/#how" className={link}>How It Works</a>
-          <a href="/#faq" className={link}>FAQ</a>
-        </nav>
-        <Link
-          to="/extract"
-          className="rounded-md px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition"
-          style={{ backgroundColor: BRAND }}
-        >
-          Start Extraction
-        </Link>
-      </div>
-    </header>
-  );
-}
 
 function ExtractForm() {
   const [url, setUrl] = useState("");
@@ -255,70 +230,14 @@ function ExtractForm() {
   );
 }
 
-function DisabledLink({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      aria-disabled="true"
-      className="underline text-slate-500 pointer-events-auto select-none"
-      style={{ cursor: "not-allowed" }}
-    >
-      {children}
-    </span>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-slate-50 border-t border-slate-200">
-      <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-4 gap-10">
-        <div>
-          <Logo imgClassName="h-9 w-auto" />
-          <p className="mt-4 text-sm text-slate-600 max-w-xs leading-relaxed">
-            Precision data extraction for the modern web.
-          </p>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">PRODUCT</h4>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/#features" className="underline text-slate-700 hover:opacity-70">Features</a></li>
-            <li><DisabledLink>Pricing</DisabledLink></li>
-            <li><DisabledLink>API Docs</DisabledLink></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">RESOURCES</h4>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li><DisabledLink>Blog</DisabledLink></li>
-            <li><DisabledLink>Case Studies</DisabledLink></li>
-            <li><DisabledLink>Support</DisabledLink></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-slate-700">LEGAL</h4>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="#" className="underline text-slate-700 hover:opacity-70">Privacy Policy</a></li>
-            <li><a href="#" className="underline text-slate-700 hover:opacity-70">Terms of Service</a></li>
-            <li><a href="#" className="underline text-slate-700 hover:opacity-70">Security</a></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-slate-200">
-        <div className="mx-auto max-w-7xl px-6 py-6 text-xs text-slate-500">
-          © 2026 flowXtract. All rights reserved.
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 function ExtractPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col">
-      <Nav />
+      <SiteNav />
       <main className="flex-1">
         <ExtractForm />
       </main>
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }
