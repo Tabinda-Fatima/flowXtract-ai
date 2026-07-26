@@ -84,7 +84,7 @@ function ExtractForm() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50">
-      <div className="mx-auto max-w-3xl px-6 py-16 md:py-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 md:py-20">
         {submittedEmail ? (
           <div className="rounded-2xl bg-white border border-slate-200 shadow-lg p-8 md:p-10 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50">
