@@ -150,9 +150,27 @@ function ContactPage() {
               <h2 className="text-xs font-bold tracking-wider text-slate-700">ELSEWHERE</h2>
               <ul className="mt-5 space-y-4 text-sm">
                 {[
-                  { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/company/flowxtract" },
-                  { icon: Github, label: "GitHub", value: "github.com/flowxtract" },
-                  { icon: Mail, label: "Business Email", value: "hello@flowxtract.com" },
+                  {
+                    icon: Linkedin,
+                    label: "LinkedIn",
+                    value: "linkedin.com/in/tabinda-fatima-738451380",
+                    href: "https://www.linkedin.com/in/tabinda-fatima-738451380",
+                    external: true,
+                  },
+                  {
+                    icon: Github,
+                    label: "GitHub",
+                    value: "github.com/Tabinda-Fatima",
+                    href: "https://github.com/Tabinda-Fatima",
+                    external: true,
+                  },
+                  {
+                    icon: Mail,
+                    label: "Business Email",
+                    value: "tabindafatima5566@gmail.com",
+                    href: "mailto:tabindafatima5566@gmail.com",
+                    external: false,
+                  },
                 ].map((c) => (
                   <li key={c.label} className="flex items-start gap-3">
                     <span
@@ -163,15 +181,17 @@ function ContactPage() {
                     </span>
                     <span className="min-w-0">
                       <span className="block font-semibold text-slate-900">{c.label}</span>
-                      <span className="block break-words text-slate-600">{c.value}</span>
+                      <a
+                        href={c.href}
+                        {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        className="block break-words text-slate-600 hover:underline"
+                      >
+                        {c.value}
+                      </a>
                     </span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-xs text-slate-500 leading-relaxed">
-                These details are placeholders and will be updated with the official
-                flowXtract channels.
-              </p>
             </div>
           </div>
         </div>
