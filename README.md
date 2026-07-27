@@ -16,6 +16,17 @@ flowXtract solves this problem by allowing users to simply enter:
 
 The system automatically analyzes the website, extracts the requested publicly available data, cleans and structures it, stores it in Google Sheets, and emails the final results.
 
+## Error Handling
+
+- If a user submits a homepage, incorrect URL, or a page that does not contain the requested products or records, flowXtract automatically sends an email explaining the       likely issue and guides the user to submit a direct listing, category, search, jobs, property, or article page.
+
+- If the submitted page is correct but the website blocks automated extraction through CAPTCHA, anti-bot protection, login requirements, or restricted access, flowXtract       also informs the user by email and explains that the website may be preventing access to the requested data.
+  
+- No empty Google Sheet is created when extractable data is not found.
+
+## Data Extraction Behavior
+
+flowXtract extracts all publicly accessible records available on the submitted webpage at the time of extraction. The total number of extracted records may vary depending on the website structure, pagination, dynamic content loading, CAPTCHA, anti-bot protection, and other access restrictions imposed by the target website.
 ### Target Users
 
 - Researchers
@@ -28,13 +39,9 @@ The system automatically analyzes the website, extracts the requested publicly a
 
 ---
 
-
-
-## Live Application
+## Live Demo
 
 🔗 [**Live Demo**](https://flowxtract-landing-page-build.vercel.app)
-
-
 
 ---
 
@@ -158,9 +165,36 @@ The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through
 
 ---
 
+## Example URLs for Testing
 
+ These example pages were successfully tested during development and can be used to evaluate the application.
 
-**# Project Documents in Google Docs.Links**
+### 📚 Books to Scrape
+
+🔗 [Open Books to Scrape](https://books.toscrape.com/)
+
+**Example Request:**  
+Extract book titles, prices, availability, ratings, product links, and image URLs.
+
+---
+
+### 🏠 Zameen Property Listings
+
+🔗 [Open Zameen Karachi Listings](https://www.zameen.com/Homes/Karachi-2-1.html)
+
+**Example Request:**  
+Extract property titles, prices, locations, areas, bedrooms, bathrooms, property types, listing links, and image URLs.
+
+---
+
+### 🛍️ Daraz Product Search
+
+🔗 [Open Daraz Body Wash Search](https://www.daraz.pk/catalog/?q=body%20wash)
+
+**Example Request:**  
+Extract product names, prices, ratings, seller names, availability, and product links.
+
+### Project Documentation & Workflow 
 
 📄 [**Master Workflow JSON**](https://docs.google.com/document/d/1K-sQVu6sMdwBFBMNdmzC7VsFlDFfJSTtobhvL1MHfcQ/edit?usp=sharing)
 
