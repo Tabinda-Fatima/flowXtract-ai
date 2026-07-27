@@ -160,9 +160,7 @@ The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through
 
 
 
-**#Google Docs.Links**
-
-## Project Documents
+**# Project Documents in Google Docs.Links**
 
 📄 [**Master Workflow JSON**](https://docs.google.com/document/d/1K-sQVu6sMdwBFBMNdmzC7VsFlDFfJSTtobhvL1MHfcQ/edit?usp=sharing)
 
