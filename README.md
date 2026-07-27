@@ -165,6 +165,54 @@ The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through
 
 ---
 
+## Run Locally
+
+### Prerequisites
+
+Before starting, make sure the following are installed:
+
+- Git
+- Node.js 18 or later
+- npm
+
+### Frontend Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Tabinda-Fatima/flowXtract-ai.git
+```
+
+Move into the project directory:
+
+```bash
+cd flowXtract-ai
+```
+
+Install the required dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed in the terminal, usually:
+
+```text
+http://localhost:5173
+```
+
+### Important Note
+---
+
+These steps run the frontend locally. The complete AI-powered extraction functionality depends on the configured n8n backend and connected services, including OpenAI, Browserless, Google Sheets, and Gmail.
+For the complete working experience, use the [deployed Live Demo](https://flowxtract-landing-page-build.vercel.app).
+
 ## Example URLs for Testing
 
  These example pages were successfully tested during development and can be used to evaluate the application.
