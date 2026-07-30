@@ -1,14 +1,14 @@
 # flowXtract
 
-An AI-powered multi-agent web data extraction application that automatically extracts publicly available website data, cleans and organizes it, stores it in Google Sheets, and delivers the results to the user via email.
+An AI-powered multi-agent platform that extracts publicly available website data, cleans and structures it, stores the results in Google Sheets, and delivers them to users via email using n8n and OpenAI.
 
 ---
 
 # Problem It Solves
 
-Collecting structured data from websites manually is repetitive, time-consuming, and often requires technical scraping knowledge.
-
-flowXtract solves this problem by allowing users to simply enter:
+Collecting structured data from websites manually is time-consuming, repetitive, and often requires technical web scraping expertise. 
+flowXtract automates this entire process through an AI-powered multi-agent workflow.
+Users simply provide::
 
 - A website URL
 - The data they want to extract
@@ -58,10 +58,11 @@ flowXtract extracts all publicly accessible records available on the submitted w
 - Email delivery with Google Sheet link and Excel attachment
 - End-to-end workflow automation
 - Simple and user-friendly interface
+- Automatic email-based error notifications
+- Intelligent validation of user requests
 
 ---
-
-# AI Feature
+# Multi-Agent Architecture
 
 flowXtract is built using a modular multi-agent architecture coordinated by a central Master Agent.
 
@@ -94,20 +95,18 @@ The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through
 
 ---
 
-# Tools, Services & AI Models
+# Tech Stack
 
 - n8n
 - OpenAI GPT-4.1 Mini
-- Browserless
 - JavaScript
-- HTTP Request
+- Browserless
 - Google Sheets
 - Gmail
-- Lovable AI
-- GitHub
+- Lovable
 - Vercel
+- GitHub
 - n8n Cloud
-
 ---
 
 # Screenshots
@@ -135,16 +134,15 @@ The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through
 ![Execution](images/workflow-execution.png)
 
 ---
+## Generated Google Sheet
+
+![Google Sheet](images/google-sheet.png)
+
+---
 
 ## Email Delivery
 
 ![Email](images/email-delivery.png)
-
----
-
-## Generated Google Sheet
-
-![Google Sheet](images/google-sheet.png)
 
 ---
 
@@ -207,13 +205,15 @@ Open the local URL displayed in the terminal, usually:
 http://localhost:5173
 ```
 
-### Important Note
 ---
+### Important Note
+
 
 These steps run the frontend locally. The complete AI-powered extraction functionality depends on the configured n8n backend and connected services, including OpenAI, Browserless, Google Sheets, and Gmail.
 For the complete working experience, use the [deployed Live Demo](https://flowxtract-landing-page-build.vercel.app).
 
-## Example URLs for Testing
+---
+# Supported Test Websites
 
  These example pages were successfully tested during development and can be used to evaluate the application.
 
@@ -242,18 +242,12 @@ Extract property titles, prices, locations, areas, bedrooms, bathrooms, property
 **Example Request:**  
 Extract product names, prices, ratings, seller names, availability, and product links.
 
-### Project Documentation & Workflow 
-
-📄 [**Master Workflow JSON**](https://docs.google.com/document/d/1K-sQVu6sMdwBFBMNdmzC7VsFlDFfJSTtobhvL1MHfcQ/edit?usp=sharing)
-
-📄 [**Project Documentation**](https://docs.google.com/document/d/1_DpdePSH4sknlYrxNXqO8Fds3wrCyUder68etikXLSM/edit?usp=sharing)
-
 
 
 ---
 
-# Author
+# 👩‍💻 Author
 
 **Tabinda Fatima**
 
-ACT AI Final Project – 2026
+AI Automation & Workflow Developer
