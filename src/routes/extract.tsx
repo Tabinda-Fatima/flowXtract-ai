@@ -188,7 +188,7 @@ function ExtractForm() {
                         key={option.id}
                         type="button"
                         onClick={() => toggleFormat(option.id)}
-                        className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                        className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm transition ${
                           checked
                             ? "border-blue-200 bg-blue-50 text-slate-900"
                             : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
@@ -213,7 +213,10 @@ function ExtractForm() {
                             </svg>
                           )}
                         </span>
-                        {option.label}
+                        <span className="font-medium">{option.label}</span>
+                        {option.ext && (
+                          <span className="text-xs text-slate-400 font-normal">{option.ext}</span>
+                        )}
                       </button>
                     );
                   })}
