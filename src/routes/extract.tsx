@@ -32,10 +32,24 @@ function ExtractForm() {
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
+  const [outputFormats, setOutputFormats] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ url?: string; description?: string; email?: string }>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+
+  const formatOptions = [
+    { id: "google-sheets", label: "Google Sheets" },
+    { id: "excel", label: "Excel (.xlsx)" },
+    { id: "csv", label: "CSV (.csv)" },
+    { id: "json", label: "JSON (.json)" },
+  ];
+
+  function toggleFormat(id: string) {
+    setOutputFormats((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  }
 
   function validate() {
     const e: { url?: string; description?: string; email?: string } = {};
@@ -159,6 +173,51 @@ function ExtractForm() {
                   className={`mt-2 w-full resize-none rounded-md border px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 bg-white ${errors.description ? "border-red-400" : "border-slate-200"}`}
                 />
                 {errors.description && <p className="mt-1.5 text-xs text-red-600">{errors.description}</p>}
+              </div>
+
+              <div>
+                <label className="text-xs font-bold tracking-wider text-slate-700">
+                  OUTPUT FORMAT
+                </label>
+                <p className="mt-1 text-xs text-slate-500">Choose one or more formats.</p>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  {formatOptions.map((option) => {
+                    const checked = outputFormats.includes(option.id);
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => toggleFormat(option.id)}
+                        className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                          checked
+                            ? "border-blue-200 bg-blue-50 text-slate-900"
+                            : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${
+                            checked ? "border-blue-700 bg-blue-700" : "border-slate-300 bg-white"
+                          }`}
+                        >
+                          {checked && (
+                            <svg
+                              className="h-3 w-3 text-white"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </span>
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div>
