@@ -176,6 +176,51 @@ function ExtractForm() {
               </div>
 
               <div>
+                <label className="text-xs font-bold tracking-wider text-slate-700">
+                  OUTPUT FORMAT
+                </label>
+                <p className="mt-1 text-xs text-slate-500">Choose one or more formats.</p>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  {formatOptions.map((option) => {
+                    const checked = outputFormats.includes(option.id);
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => toggleFormat(option.id)}
+                        className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                          checked
+                            ? "border-blue-200 bg-blue-50 text-slate-900"
+                            : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${
+                            checked ? "border-blue-700 bg-blue-700" : "border-slate-300 bg-white"
+                          }`}
+                        >
+                          {checked && (
+                            <svg
+                              className="h-3 w-3 text-white"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </span>
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
                 <label htmlFor="email" className="text-xs font-bold tracking-wider text-slate-700">
                   EMAIL ADDRESS
                 </label>
