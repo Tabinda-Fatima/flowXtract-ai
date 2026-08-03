@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ExtractionForm } from "@/components/ExtractionForm";
 import { useState } from "react";
 import {
   User,
@@ -10,9 +11,6 @@ import {
   Brush,
   LayoutGrid,
   MailPlus,
-  Link as LinkIcon,
-  Mail,
-  Zap,
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
@@ -116,7 +114,7 @@ function Hero() {
           </p>
         </div>
 
-        {/* Mock card */}
+        {/* Extraction form */}
         <div className="rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-200 bg-slate-50">
             <span className="h-3 w-3 rounded-full bg-red-400" />
@@ -126,41 +124,10 @@ function Hero() {
               New Extraction Task
             </span>
           </div>
-          <div className="p-6 space-y-5">
-            <Field label="Website URL" icon={<LinkIcon className="h-4 w-4" />} placeholder="https://example.com/products" />
-            <div>
-              <label className="text-xs font-semibold text-slate-700">What data do you want to extract?</label>
-              <textarea
-                disabled
-                rows={3}
-                placeholder="I need names, prices, and descriptions for all items on this page..."
-                className="mt-2 w-full resize-none rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-600 placeholder:text-slate-400 bg-white"
-              />
-            </div>
-            <Field label="Email Address" icon={<Mail className="h-4 w-4" />} placeholder="you@company.com" />
-            <Link
-              to="/extract"
-              className="flex items-center justify-center gap-2 rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition"
-              style={{ backgroundColor: BRAND }}
-            >
-              <Zap className="h-4 w-4" /> Start AI Extraction
-            </Link>
-          </div>
+          <ExtractionForm bare showTrust={false} />
         </div>
       </div>
     </section>
-  );
-}
-
-function Field({ label, icon, placeholder }: { label: string; icon: React.ReactNode; placeholder: string }) {
-  return (
-    <div>
-      <label className="text-xs font-semibold text-slate-700">{label}</label>
-      <div className="mt-2 flex items-center gap-2 rounded-md border border-slate-200 px-3 py-2 bg-white">
-        <span className="text-slate-400">{icon}</span>
-        <span className="text-sm text-slate-400">{placeholder}</span>
-      </div>
-    </div>
   );
 }
 
