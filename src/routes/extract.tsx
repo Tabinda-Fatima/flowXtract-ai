@@ -39,10 +39,10 @@ function ExtractForm() {
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const formatOptions = [
-    { id: "google-sheets", label: "Google Sheets" },
-    { id: "excel", label: "Excel (.xlsx)" },
-    { id: "csv", label: "CSV (.csv)" },
-    { id: "json", label: "JSON (.json)" },
+    { id: "google-sheets", label: "Google Sheets", ext: "" },
+    { id: "excel", label: "Excel", ext: ".xlsx" },
+    { id: "csv", label: "CSV", ext: ".csv" },
+    { id: "json", label: "JSON", ext: ".json" },
   ];
 
   function toggleFormat(id: string) {
