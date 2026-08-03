@@ -265,7 +265,7 @@ function ExtractForm() {
               <div className="border-t border-slate-200 pt-4 space-y-2">
                 <p className="flex items-start gap-2 text-xs text-slate-600">
                   <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-                  We'll send the completed Google Sheet to your email once processing is complete.
+                  We'll send your selected output formats to your email once processing is complete.
                 </p>
                 <p className="flex items-start gap-2 text-xs italic text-slate-500">
                   <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
