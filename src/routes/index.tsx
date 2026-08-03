@@ -11,9 +11,6 @@ import {
   Brush,
   LayoutGrid,
   MailPlus,
-  Link as LinkIcon,
-  Mail,
-  Zap,
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
