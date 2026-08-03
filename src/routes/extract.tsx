@@ -39,10 +39,10 @@ function ExtractForm() {
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const formatOptions = [
-    { id: "google-sheets", label: "Google Sheets" },
-    { id: "excel", label: "Excel (.xlsx)" },
-    { id: "csv", label: "CSV (.csv)" },
-    { id: "json", label: "JSON (.json)" },
+    { id: "google-sheets", label: "Google Sheets", ext: "" },
+    { id: "excel", label: "Excel", ext: ".xlsx" },
+    { id: "csv", label: "CSV", ext: ".csv" },
+    { id: "json", label: "JSON", ext: ".json" },
   ];
 
   function toggleFormat(id: string) {
@@ -188,7 +188,7 @@ function ExtractForm() {
                         key={option.id}
                         type="button"
                         onClick={() => toggleFormat(option.id)}
-                        className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                        className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm transition ${
                           checked
                             ? "border-blue-200 bg-blue-50 text-slate-900"
                             : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
@@ -213,7 +213,10 @@ function ExtractForm() {
                             </svg>
                           )}
                         </span>
-                        {option.label}
+                        <span className="font-medium">{option.label}</span>
+                        {option.ext && (
+                          <span className="text-xs text-slate-400 font-normal">{option.ext}</span>
+                        )}
                       </button>
                     );
                   })}
@@ -262,7 +265,7 @@ function ExtractForm() {
               <div className="border-t border-slate-200 pt-4 space-y-2">
                 <p className="flex items-start gap-2 text-xs text-slate-600">
                   <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-                  We'll send the completed Google Sheet to your email once processing is complete.
+                  We'll send your selected output formats to your email once processing is complete.
                 </p>
                 <p className="flex items-start gap-2 text-xs italic text-slate-500">
                   <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
