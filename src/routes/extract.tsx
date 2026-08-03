@@ -32,10 +32,24 @@ function ExtractForm() {
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
+  const [outputFormats, setOutputFormats] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ url?: string; description?: string; email?: string }>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+
+  const formatOptions = [
+    { id: "google-sheets", label: "Google Sheets" },
+    { id: "excel", label: "Excel (.xlsx)" },
+    { id: "csv", label: "CSV (.csv)" },
+    { id: "json", label: "JSON (.json)" },
+  ];
+
+  function toggleFormat(id: string) {
+    setOutputFormats((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  }
 
   function validate() {
     const e: { url?: string; description?: string; email?: string } = {};
