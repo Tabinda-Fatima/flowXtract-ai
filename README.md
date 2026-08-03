@@ -1,253 +1,181 @@
 # flowXtract
 
-An AI-powered multi-agent platform that extracts publicly available website data, cleans and structures it, stores the results in Google Sheets, and delivers them to users via email using n8n and OpenAI.
+**Turn any public website into a structured, business-ready dataset — no manual extraction scripts, no manual data entry.**
+
+flowXtract is an AI-powered data extraction platform built for teams who need clean, structured information from the web without the overhead of building and maintaining custom web data extraction infrastructure. Submit a website URL, describe what you need, and receive a structured dataset delivered directly to your inbox.
+
+🔗 **Live Demo:** https://flowxtract-landing-page-build.vercel.app
 
 ---
 
-# Problem It Solves
+## Business Problem
 
-Collecting structured data from websites manually is time-consuming, repetitive, and often requires technical web scraping expertise. 
-flowXtract automates this entire process through an AI-powered multi-agent workflow.
-Users simply provide::
+Teams across sales, marketing, research, and operations regularly need structured data from websites — competitor pricing, product catalogs, job listings, business directories, real estate data — but getting it usually means one of two things:
 
-- A website URL
-- The data they want to extract
-- Their email address
+- Manually copying and organizing information page by page, or
+- Relying on developers to build and maintain custom data extraction scripts that break every time a website changes.
 
-The system automatically analyzes the website, extracts the requested publicly available data, cleans and structures it, stores it in Google Sheets, and emails the final results.
+Both approaches are slow, expensive to sustain, and pull skilled people away from higher-value work.
+
+## Solution
+
+flowXtract removes that overhead. Instead of writing extraction logic or hiring technical resources, users simply describe what data they need in plain language. The platform handles the analysis, extraction, and structuring automatically, and delivers a finished dataset ready for immediate use.
+
+No coding. No extraction workflow to configure. No manual cleanup.
+
+---
+
+## How flowXtract Works
+
+flowXtract processes each request through a series of visible stages:
+1. **Request Received** — URL, data requirements, and email are submitted
+2. **Website Analysis** — the target page is assessed for structure and accessibility
+3. **Extraction Strategy Selection** — the right approach is chosen for the specific site and request
+4. **Data Extraction** — publicly available information is collected
+5. **Data Cleaning & Validation** — extracted data is checked, standardized, and structured
+6. **Structured Output Generation** — a clean, business-ready dataset is assembled
+7. **Google Sheet Creation** — results are compiled into a shareable spreadsheet
+8. **Email Delivery** — the final dataset is sent directly to the user
+
+---
+
+## AI Architecture
+
+flowXtract is built on an **Agentic AI Architecture**, using **Multi-Agent Orchestration** rather than a single general-purpose model. An **Agentic Orchestrator** coordinates a set of **Specialized Sub-Agents**, each responsible for a distinct part of the extraction process:
+
+- **Website Analyzer Agent** — evaluates page structure, accessibility, and content type
+- **Extraction Agent** — determines the most effective extraction approach for the request
+- **Data Intelligence Agent** — validates, cleans, and standardizes extracted information
+- **Output Generation Agent** — assembles the final dataset and manages delivery
+
+These agents are powered by **Intelligent Language Models** working in coordination, allowing flowXtract to adapt its approach to each website and request rather than relying on rigid, pre-defined rules.
+
+---
+
+## Core Features
+
+- Agentic AI Architecture with Multi-Agent Orchestration
+- Natural-language data extraction requests
+- Intelligent website analysis and adaptive extraction strategy selection
+- Public web data extraction across a range of site types
+- Automated data cleaning and validation
+- Dynamic structured output generation
+- Google Sheets generation
+- Excel export
+- Automated email delivery
+- Built-in error handling for failed or restricted extractions
+
+---
 
 ## Error Handling
 
-- If a user submits a homepage, incorrect URL, or a page that does not contain the requested products or records, flowXtract automatically sends an email explaining the       likely issue and guides the user to submit a direct listing, category, search, jobs, property, or article page.
+flowXtract is designed to fail transparently rather than silently. Users are automatically informed when:
 
-- If the submitted page is correct but the website blocks automated extraction through CAPTCHA, anti-bot protection, login requirements, or restricted access, flowXtract       also informs the user by email and explains that the website may be preventing access to the requested data.
-  
-- No empty Google Sheet is created when extractable data is not found.
+- An unsupported or incorrect page is submitted
+- The requested public data is unavailable
+- The target page requires login access
+- CAPTCHA or anti-bot protections block extraction
+- Website restrictions prevent automated access
 
-## Data Extraction Behavior
-
-flowXtract extracts all publicly accessible records available on the submitted webpage at the time of extraction. The total number of extracted records may vary depending on the website structure, pagination, dynamic content loading, CAPTCHA, anti-bot protection, and other access restrictions imposed by the target website.
-### Target Users
-
-- Researchers
-- Businesses
-- Freelancers
-- Sales & Marketing Teams
-- E-commerce Professionals
-- Real Estate Professionals
-- Students & Developers
+No empty or misleading output is generated when extraction cannot be completed — users are told clearly what happened and why.
 
 ---
 
-## Live Demo
+## Business Use Cases
 
-🔗 [**Live Demo**](https://flowxtract-landing-page-build.vercel.app)
-
----
-
-# Features
-
-- AI-powered multi-agent workflow
-- Automatic website analysis
-- Supports both static and dynamic websites
-- Intelligent extraction strategy selection
-- Browserless support for JavaScript-rendered websites
-- Custom data extraction based on user requirements
-- Automatic data cleaning and validation
-- Dynamic Google Sheets generation
-- Email delivery with Google Sheet link and Excel attachment
-- End-to-end workflow automation
-- Simple and user-friendly interface
-- Automatic email-based error notifications
-- Intelligent validation of user requests
-
----
-# Multi-Agent Architecture
-
-flowXtract is built using a modular multi-agent architecture coordinated by a central Master Agent.
-
-### Master Agent
-- Validates user requests
-- Orchestrates the complete workflow
-- Coordinates all AI agents
-- Handles workflow routing and error handling
-
-### Website Analyzer Agent
-- Detects website category
-- Identifies rendering type
-- Recommends the appropriate extraction strategy
-
-### Scraper Agent
-- Extracts publicly available website data
-- Supports both static and Browserless-powered dynamic extraction
-
-### Data Cleaner Agent
-- Removes duplicates
-- Cleans and standardizes extracted data
-- Validates output
-
-### Data Store Agent
-- Creates Google Sheets automatically
-- Stores cleaned data
-- Sends email with Google Sheet link and Excel attachment
-
-The AI agents are powered using **OpenAI GPT-4.1 Mini** and orchestrated through **n8n AI Agent workflows**.
+- Sales prospecting and lead list building
+- Competitor research and pricing intelligence
+- Product and catalog intelligence
+- Market research
+- Real estate listings
+- Job listings aggregation
+- Business directory compilation
+- Research data collection
 
 ---
 
-# Tech Stack
+## Target Customers
 
-- n8n
-- OpenAI GPT-4.1 Mini
-- JavaScript
-- Browserless
+- Small and mid-sized businesses
+- Sales teams
+- Marketing teams
+- Agencies
+- E-commerce businesses
+- Real estate companies
+- Researchers and analysts
+- Business analysts
+
+---
+
+## Current Input Formats
+
+- Website URL
+- Extraction instructions (plain language)
+- Email address
+
+### Planned Input Formats
+
+- PDF
+- CSV
+- Excel
+- Plain text
+
+---
+
+## Current Output Formats
+
 - Google Sheets
-- Gmail
-- Lovable
-- Vercel
-- GitHub
-- n8n Cloud
+- Excel
+
+### Planned Output Formats
+
+- CSV
+- JSON
+- API access
+- Webhooks
+
+**Document Intelligence** for structured processing of uploaded documents is planned for a future release.
+
 ---
 
-# Screenshots
+## Why flowXtract
 
-## Landing Page
+- Describe what you need in plain language — no technical setup required
+- Adapts its extraction approach per website rather than using fixed templates
+- Validates and structures data automatically before delivery
+- Delivers results in formats teams already use (Sheets, Excel)
+- Communicates clearly when data isn't available, instead of failing silently
+- Built specifically for business use cases, not general-purpose web data extraction
+
+---
+
+## Product Screenshots
 
 ![Landing Page](images/landing-page.png)
 
----
+![Data Extraction Form](images/extraction-form.png)
 
-## Data Extraction Form
+![Generated Google Sheet](images/google-sheet.png)
 
-![Extraction Form](images/extraction-form.png)
-
----
-
-## n8n Multi-Agent Workflow
-
-![Workflow](images/workflow.png)
+![Email Delivery](images/email-delivery.png)
 
 ---
 
-## Successful Workflow Execution
+## Responsible Use
 
-![Execution](images/workflow-execution.png)
-
----
-## Generated Google Sheet
-
-![Google Sheet](images/google-sheet.png)
+flowXtract is designed to extract publicly available information only. It does not bypass login systems, CAPTCHA, or other access controls, and it respects website restrictions that prevent automated access. Users are responsible for ensuring their extraction requests comply with the terms of use of the websites they submit.
 
 ---
 
-## Email Delivery
+## Product Status
 
-![Email](images/email-delivery.png)
+flowXtract is a live B2B SaaS MVP, currently evolving through real-world testing, customer feedback, and ongoing market research.
 
----
-
-# How to Run
-
-1. Open the live application.
-2. Enter a public website URL.
-3. Describe the data you want to extract.
-4. Enter your email address.
-5. Click **Start Extraction**.
-6. The backend automatically:
-   - Analyzes the website
-   - Selects the extraction strategy
-   - Extracts the requested data
-   - Cleans the results
-   - Creates a Google Sheet
-   - Sends the final results via email
+Currently supports website-based data extraction, with additional input and output formats planned for future releases.
 
 ---
 
-## Run Locally
+## Founder
 
-### Prerequisites
-
-Before starting, make sure the following are installed:
-
-- Git
-- Node.js 18 or later
-- npm
-
-### Frontend Setup
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Tabinda-Fatima/flowXtract-ai.git
-```
-
-Move into the project directory:
-
-```bash
-cd flowXtract-ai
-```
-
-Install the required dependencies:
-
-```bash
-npm install
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-Open the local URL displayed in the terminal, usually:
-
-```text
-http://localhost:5173
-```
-
----
-### Important Note
-
-
-These steps run the frontend locally. The complete AI-powered extraction functionality depends on the configured n8n backend and connected services, including OpenAI, Browserless, Google Sheets, and Gmail.
-For the complete working experience, use the [deployed Live Demo](https://flowxtract-landing-page-build.vercel.app).
-
----
-# Supported Test Websites
-
- These example pages were successfully tested during development and can be used to evaluate the application.
-
-### 📚 Books to Scrape
-
-🔗 [Open Books to Scrape](https://books.toscrape.com/)
-
-**Example Request:**  
-Extract book titles, prices, availability, ratings, product links, and image URLs.
-
----
-
-### 🏠 Zameen Property Listings
-
-🔗 [Open Zameen Karachi Listings](https://www.zameen.com/Homes/Karachi-2-1.html)
-
-**Example Request:**  
-Extract property titles, prices, locations, areas, bedrooms, bathrooms, property types, listing links, and image URLs.
-
----
-
-### 🛍️ Daraz Product Search
-
-🔗 [Open Daraz Body Wash Search](https://www.daraz.pk/catalog/?q=body%20wash)
-
-**Example Request:**  
-Extract product names, prices, ratings, seller names, availability, and product links.
-
-
-
----
-
-# 👩‍💻 Author
-
-**Tabinda Fatima**
-
-AI Automation & Workflow Developer
+**Tabinda Fatima**  
+AI Automation & Agentic AI Developer
