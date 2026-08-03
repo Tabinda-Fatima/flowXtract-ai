@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ExtractionForm } from "@/components/ExtractionForm";
 import { useState } from "react";
 import {
   User,
