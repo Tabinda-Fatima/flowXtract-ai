@@ -26,14 +26,14 @@ const FORMATS = [
 ];
 
 const STEPS = [
-  "Analyzing website",
-  "Extracting data",
-  "Cleaning and organizing data",
-  "Preparing selected output formats",
-  "Sending results to your email",
+  "Website Analyzer Agent working...",
+  "Scraper Agent extracting data...",
+  "Data Cleaner Agent organizing results...",
+  "Data Store Agent preparing selected format(s)...",
+  "Sending results to your email...",
 ];
 
-const STEP_MS = 25000; // 5 steps => >= 2 minutes
+const STEP_MS = 25000; // 5 steps => ~2 minutes
 
 function shortLabel(value: string) {
   const f = FORMATS.find((x) => x.value === value);
@@ -54,8 +54,7 @@ export function ExtractionForm({
   const [outputFormats, setOutputFormats] = useState<string[]>(["gsheet"]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [pendingFormat, setPendingFormat] = useState<string | null>(null);
-  const [multiUnlocked, setMultiUnlocked] = useState(false);
+  const [upgradeNotice, setUpgradeNotice] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     url?: string;
     description?: string;
@@ -64,7 +63,8 @@ export function ExtractionForm({
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+  const [showProgress, setShowProgress] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -80,37 +80,35 @@ export function ExtractionForm({
   }, [dropdownOpen]);
 
   useEffect(() => {
-    if (!submitting) return;
+    if (!showProgress) return;
     setActiveStep(0);
     const timers = STEPS.map((_, i) =>
       window.setTimeout(() => setActiveStep(i), i * STEP_MS)
     );
     return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [submitting]);
+  }, [showProgress]);
 
   function toggleFormat(value: string) {
+    // Single format is free. Selecting a second one requires payment (not connected yet).
     if (outputFormats.includes(value)) {
+      if (outputFormats.length === 1) return; // keep at least one selected
       setOutputFormats((prev) => prev.filter((f) => f !== value));
       return;
     }
-    if (outputFormats.length >= 1 && !multiUnlocked) {
-      setPendingFormat(value);
+    if (outputFormats.length >= 1) {
+      setUpgradeNotice(null);
       setUpgradeOpen(true);
       return;
     }
-    setOutputFormats((prev) => [...prev, value]);
+    setOutputFormats([value]);
   }
 
   function confirmUpgrade() {
-    // Placeholder payment action — to be connected to NayaPay later.
-    setMultiUnlocked(true);
-    if (pendingFormat) setOutputFormats((prev) => [...prev, pendingFormat]);
-    setPendingFormat(null);
-    setUpgradeOpen(false);
+    setUpgradeNotice("Payment integration is coming soon.");
   }
 
-  function declineUpgrade() {
-    setPendingFormat(null);
+  function closeUpgrade() {
+    setUpgradeNotice(null);
     setUpgradeOpen(false);
   }
 
@@ -133,8 +131,9 @@ export function ExtractionForm({
     setErrors(e);
     if (Object.keys(e).length > 0) return;
     setSubmitError(null);
+    setSucceeded(false);
     setSubmitting(true);
-    const minDuration = new Promise((r) => setTimeout(r, STEPS.length * STEP_MS));
+    setShowProgress(true);
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
@@ -150,107 +149,18 @@ export function ExtractionForm({
         }),
       });
       if (!res.ok) throw new Error("Request failed");
-      await minDuration;
-      setSubmittedEmail(email.trim());
+      setSucceeded(true);
     } catch {
       setSubmitError("Unable to submit your request. Please try again.");
+      setShowProgress(false);
     } finally {
       setSubmitting(false);
     }
   }
 
-  function resetForm() {
-    setUrl("");
-    setDescription("");
-    setEmail("");
-    setOutputFormats(["gsheet"]);
-    setErrors({});
-    setSubmitError(null);
-    setSubmittedEmail(null);
-  }
-
   const cardClass = bare
     ? "p-6 space-y-6"
     : "mt-10 rounded-2xl bg-white border border-slate-200 shadow-lg p-6 md:p-8 space-y-6";
-  const successClass = bare
-    ? "p-6 text-center"
-    : "rounded-2xl bg-white border border-slate-200 shadow-lg p-8 md:p-10 text-center";
-
-  if (submittedEmail) {
-    return (
-      <>
-        <div className={successClass}>
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50">
-            <CheckCircle2 className="h-8 w-8" style={{ color: BRAND }} />
-          </div>
-          <h2 className="mt-6 text-2xl md:text-3xl font-bold text-slate-900">
-            Extraction Request Submitted
-          </h2>
-          <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Your extraction is being finalized. Your selected output format(s) will be delivered by
-            email shortly.
-          </p>
-          <p className="mt-4 text-sm text-slate-700">
-            Confirmation will be sent to <span className="font-semibold">{submittedEmail}</span>
-          </p>
-          <button
-            type="button"
-            onClick={resetForm}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition"
-            style={{ backgroundColor: BRAND }}
-          >
-            Submit Another Request
-          </button>
-        </div>
-        {showTrust && <TrustLabels />}
-      </>
-    );
-  }
-
-  if (submitting) {
-    return (
-      <>
-        <div className={cardClass}>
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-slate-900">
-              Processing Your Extraction
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              This can take a couple of minutes. Please keep this page open.
-            </p>
-          </div>
-          <ol className="space-y-3">
-            {STEPS.map((step, i) => {
-              const done = i < activeStep;
-              const active = i === activeStep;
-              return (
-                <li
-                  key={step}
-                  className={`flex items-center gap-3 rounded-md border px-3 py-2.5 text-sm transition ${
-                    active
-                      ? "border-blue-200 bg-blue-50 text-slate-900"
-                      : done
-                        ? "border-slate-200 bg-white text-slate-700"
-                        : "border-slate-200 bg-white text-slate-400"
-                  }`}
-                >
-                  {done ? (
-                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: BRAND }} />
-                  ) : active ? (
-                    <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: BRAND }} />
-                  ) : (
-                    <span className="h-4 w-4 shrink-0 rounded-full border border-slate-300" />
-                  )}
-                  <span className="font-medium">{step}</span>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-        {showTrust && <TrustLabels />}
-      </>
-    );
-  }
 
   const summary =
     outputFormats.length === 0
@@ -370,12 +280,64 @@ export function ExtractionForm({
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || showProgress}
           className="w-full inline-flex items-center justify-center gap-2 rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
           style={{ backgroundColor: BRAND }}
         >
-          Start AI Extraction <Zap className="h-4 w-4" />
+          {submitting ? (
+            <>
+              Submitting Request... <Loader2 className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            <>
+              Start AI Extraction <Zap className="h-4 w-4" />
+            </>
+          )}
         </button>
+
+        {showProgress && (
+          <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 space-y-3 animate-in fade-in duration-300">
+            <p className="text-xs font-bold tracking-wider text-slate-700">
+              PROCESSING YOUR EXTRACTION
+            </p>
+            <ol className="space-y-2">
+              {STEPS.map((step, i) => {
+                const done = i < activeStep;
+                const active = i === activeStep;
+                return (
+                  <li
+                    key={step}
+                    className={`flex items-center gap-3 rounded-md border px-3 py-2 text-sm transition-all duration-300 ${
+                      active
+                        ? "border-blue-200 bg-blue-50 text-slate-900"
+                        : done
+                          ? "border-slate-200 bg-white text-slate-700"
+                          : "border-slate-200 bg-white text-slate-400"
+                    }`}
+                  >
+                    {done ? (
+                      <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: BRAND }} />
+                    ) : active ? (
+                      <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: BRAND }} />
+                    ) : (
+                      <span className="h-4 w-4 shrink-0 rounded-full border border-slate-300" />
+                    )}
+                    <span className="font-medium">{step}</span>
+                  </li>
+                );
+              })}
+            </ol>
+            {succeeded && (
+              <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm text-slate-800 animate-in fade-in duration-300">
+                <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" style={{ color: BRAND }} />
+                <span>
+                  Your request has been submitted successfully. Your selected output format(s) will
+                  be delivered to your email shortly.
+                </span>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="border-t border-slate-200 pt-4 space-y-2">
           <p className="flex items-start gap-2 text-xs text-slate-600">
@@ -399,7 +361,7 @@ export function ExtractionForm({
           <div className="relative w-full max-w-md rounded-2xl bg-white p-6 md:p-8 shadow-xl animate-in zoom-in-95 duration-200">
             <button
               type="button"
-              onClick={declineUpgrade}
+              onClick={closeUpgrade}
               aria-label="Close"
               className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
             >
@@ -409,6 +371,11 @@ export function ExtractionForm({
             <p className="mt-2 text-sm text-slate-600">
               Receive multiple output formats together in one email.
             </p>
+            {upgradeNotice && (
+              <p className="mt-4 rounded-md border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-medium text-slate-800">
+                {upgradeNotice}
+              </p>
+            )}
             <div className="mt-6 space-y-3">
               <button
                 type="button"
@@ -420,7 +387,7 @@ export function ExtractionForm({
               </button>
               <button
                 type="button"
-                onClick={declineUpgrade}
+                onClick={closeUpgrade}
                 className="w-full rounded-md border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:border-slate-300 transition"
               >
                 Continue with One Format
