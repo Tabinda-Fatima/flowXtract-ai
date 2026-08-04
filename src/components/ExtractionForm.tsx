@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   Link as LinkIcon,
   Mail,
@@ -10,10 +10,36 @@ import {
   Sparkles,
   Loader2,
   CheckCircle2,
+  ChevronDown,
+  Check,
+  X,
 } from "lucide-react";
 
 const WEBHOOK_URL = "https://haseebtabi01.app.n8n.cloud/webhook/dataextract-ai";
 const BRAND = "#1e40af";
+
+const FORMATS = [
+  { value: "gsheet", label: "Google Sheets", desc: "Shareable cloud spreadsheet" },
+  { value: "xlsx", label: "Excel (.xlsx)", desc: "Editable workbook" },
+  { value: "csv", label: "CSV", desc: "Lightweight tabular file" },
+  { value: "json", label: "JSON", desc: "Structured developer-ready data" },
+];
+
+const STEPS = [
+  "Analyzing website",
+  "Extracting data",
+  "Cleaning and organizing data",
+  "Preparing selected output formats",
+  "Sending results to your email",
+];
+
+const STEP_MS = 25000; // 5 steps => >= 2 minutes
+
+function shortLabel(value: string) {
+  const f = FORMATS.find((x) => x.value === value);
+  if (!f) return value;
+  return f.label.replace(" (.xlsx)", "");
+}
 
 export function ExtractionForm({
   bare = false,
@@ -25,32 +51,78 @@ export function ExtractionForm({
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
-  const [outputFormats, setOutputFormats] = useState<string[]>([]);
-  const [errors, setErrors] = useState<{ url?: string; description?: string; email?: string }>({});
+  const [outputFormats, setOutputFormats] = useState<string[]>(["gsheet"]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [pendingFormat, setPendingFormat] = useState<string | null>(null);
+  const [multiUnlocked, setMultiUnlocked] = useState(false);
+  const [errors, setErrors] = useState<{
+    url?: string;
+    description?: string;
+    email?: string;
+    formats?: string;
+  }>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const formatOptions = [
-    { id: "google-sheets", label: "Google Sheets", ext: "" },
-    { id: "excel", label: "Excel", ext: ".xlsx" },
-    { id: "csv", label: "CSV", ext: ".csv" },
-    { id: "json", label: "JSON", ext: ".json" },
-  ];
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function onClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [dropdownOpen]);
 
-  function toggleFormat(id: string) {
-    setOutputFormats((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+  useEffect(() => {
+    if (!submitting) return;
+    setActiveStep(0);
+    const timers = STEPS.map((_, i) =>
+      window.setTimeout(() => setActiveStep(i), i * STEP_MS)
     );
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [submitting]);
+
+  function toggleFormat(value: string) {
+    if (outputFormats.includes(value)) {
+      setOutputFormats((prev) => prev.filter((f) => f !== value));
+      return;
+    }
+    if (outputFormats.length >= 1 && !multiUnlocked) {
+      setPendingFormat(value);
+      setUpgradeOpen(true);
+      return;
+    }
+    setOutputFormats((prev) => [...prev, value]);
+  }
+
+  function confirmUpgrade() {
+    // Placeholder payment action — to be connected to NayaPay later.
+    setMultiUnlocked(true);
+    if (pendingFormat) setOutputFormats((prev) => [...prev, pendingFormat]);
+    setPendingFormat(null);
+    setUpgradeOpen(false);
+  }
+
+  function declineUpgrade() {
+    setPendingFormat(null);
+    setUpgradeOpen(false);
   }
 
   function validate() {
-    const e: { url?: string; description?: string; email?: string } = {};
+    const e: { url?: string; description?: string; email?: string; formats?: string } = {};
     if (!url.trim()) e.url = "Website URL is required.";
     else if (!/^https?:\/\//i.test(url.trim())) e.url = "URL must start with http:// or https://.";
     if (!description.trim()) e.description = "Please describe the data you want to extract.";
+    if (outputFormats.length === 0) e.formats = "Select at least one output format.";
     if (!email.trim()) e.email = "Email address is required.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = "Please enter a valid email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      e.email = "Please enter a valid email address.";
     return e;
   }
 
@@ -62,6 +134,7 @@ export function ExtractionForm({
     if (Object.keys(e).length > 0) return;
     setSubmitError(null);
     setSubmitting(true);
+    const minDuration = new Promise((r) => setTimeout(r, STEPS.length * STEP_MS));
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
@@ -69,9 +142,15 @@ export function ExtractionForm({
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true",
         },
-        body: JSON.stringify({ url: url.trim(), description: description.trim(), email: email.trim() }),
+        body: JSON.stringify({
+          url: url.trim(),
+          description: description.trim(),
+          email: email.trim(),
+          outputFormats,
+        }),
       });
       if (!res.ok) throw new Error("Request failed");
+      await minDuration;
       setSubmittedEmail(email.trim());
     } catch {
       setSubmitError("Unable to submit your request. Please try again.");
@@ -84,6 +163,7 @@ export function ExtractionForm({
     setUrl("");
     setDescription("");
     setEmail("");
+    setOutputFormats(["gsheet"]);
     setErrors({});
     setSubmitError(null);
     setSubmittedEmail(null);
@@ -107,7 +187,8 @@ export function ExtractionForm({
             Extraction Request Submitted
           </h2>
           <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Your request has been received. We'll send the completed Google Sheet to your email once processing is complete.
+            Your extraction is being finalized. Your selected output format(s) will be delivered by
+            email shortly.
           </p>
           <p className="mt-4 text-sm text-slate-700">
             Confirmation will be sent to <span className="font-semibold">{submittedEmail}</span>
@@ -125,6 +206,56 @@ export function ExtractionForm({
       </>
     );
   }
+
+  if (submitting) {
+    return (
+      <>
+        <div className={cardClass}>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900">
+              Processing Your Extraction
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              This can take a couple of minutes. Please keep this page open.
+            </p>
+          </div>
+          <ol className="space-y-3">
+            {STEPS.map((step, i) => {
+              const done = i < activeStep;
+              const active = i === activeStep;
+              return (
+                <li
+                  key={step}
+                  className={`flex items-center gap-3 rounded-md border px-3 py-2.5 text-sm transition ${
+                    active
+                      ? "border-blue-200 bg-blue-50 text-slate-900"
+                      : done
+                        ? "border-slate-200 bg-white text-slate-700"
+                        : "border-slate-200 bg-white text-slate-400"
+                  }`}
+                >
+                  {done ? (
+                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: BRAND }} />
+                  ) : active ? (
+                    <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: BRAND }} />
+                  ) : (
+                    <span className="h-4 w-4 shrink-0 rounded-full border border-slate-300" />
+                  )}
+                  <span className="font-medium">{step}</span>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+        {showTrust && <TrustLabels />}
+      </>
+    );
+  }
+
+  const summary =
+    outputFormats.length === 0
+      ? "Select output format"
+      : outputFormats.map(shortLabel).join(" + ");
 
   return (
     <>
@@ -166,52 +297,53 @@ export function ExtractionForm({
           {errors.description && <p className="mt-1.5 text-xs text-red-600">{errors.description}</p>}
         </div>
 
-        <div>
-          <label className="text-xs font-bold tracking-wider text-slate-700">
-            OUTPUT FORMAT
-          </label>
+        <div ref={dropdownRef} className="relative">
+          <label className="text-xs font-bold tracking-wider text-slate-700">OUTPUT FORMAT</label>
           <p className="mt-1 text-xs text-slate-500">Choose one or more formats.</p>
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            {formatOptions.map((option) => {
-              const checked = outputFormats.includes(option.id);
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => toggleFormat(option.id)}
-                  className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm transition ${
-                    checked
-                      ? "border-blue-200 bg-blue-50 text-slate-900"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-                  }`}
-                >
-                  <span
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${
-                      checked ? "border-blue-700 bg-blue-700" : "border-slate-300 bg-white"
-                    }`}
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={dropdownOpen}
+            onClick={() => setDropdownOpen((o) => !o)}
+            className={`mt-2 flex w-full items-center justify-between gap-2 rounded-md border px-3 py-2.5 text-sm bg-white transition hover:border-slate-300 ${
+              errors.formats ? "border-red-400" : "border-slate-200"
+            }`}
+          >
+            <span className={outputFormats.length ? "text-slate-900 font-medium" : "text-slate-400"}>
+              {summary}
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 text-slate-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+          {dropdownOpen && (
+            <div
+              role="listbox"
+              aria-multiselectable
+              className="absolute z-30 mt-2 w-full overflow-hidden rounded-md border border-slate-200 bg-white shadow-lg"
+            >
+              {FORMATS.map((f) => {
+                const selected = outputFormats.includes(f.value);
+                return (
+                  <button
+                    key={f.value}
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    onClick={() => toggleFormat(f.value)}
+                    className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-slate-50"
                   >
-                    {checked && (
-                      <svg
-                        className="h-3 w-3 text-white"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    )}
-                  </span>
-                  <span className="font-medium">{option.label}</span>
-                  {option.ext && (
-                    <span className="text-xs text-slate-400 font-normal">{option.ext}</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+                    <span>
+                      <span className="block text-sm font-medium text-slate-900">{f.label}</span>
+                      <span className="block text-xs text-slate-500">{f.desc}</span>
+                    </span>
+                    {selected && <Check className="h-4 w-4 shrink-0" style={{ color: BRAND }} />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {errors.formats && <p className="mt-1.5 text-xs text-red-600">{errors.formats}</p>}
         </div>
 
         <div>
@@ -242,15 +374,7 @@ export function ExtractionForm({
           className="w-full inline-flex items-center justify-center gap-2 rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
           style={{ backgroundColor: BRAND }}
         >
-          {submitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Submitting Request...
-            </>
-          ) : (
-            <>
-              Start AI Extraction <Zap className="h-4 w-4" />
-            </>
-          )}
+          Start AI Extraction <Zap className="h-4 w-4" />
         </button>
 
         <div className="border-t border-slate-200 pt-4 space-y-2">
@@ -265,6 +389,49 @@ export function ExtractionForm({
         </div>
       </form>
       {showTrust && <TrustLabels />}
+
+      {upgradeOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 md:p-8 shadow-xl animate-in zoom-in-95 duration-200">
+            <button
+              type="button"
+              onClick={declineUpgrade}
+              aria-label="Close"
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h3 className="text-xl font-bold text-slate-900">Export in multiple formats</h3>
+            <p className="mt-2 text-sm text-slate-600">
+              Receive multiple output formats together in one email.
+            </p>
+            <div className="mt-6 space-y-3">
+              <button
+                type="button"
+                onClick={confirmUpgrade}
+                className="w-full rounded-md py-3 text-sm font-semibold text-white hover:opacity-90 transition"
+                style={{ backgroundColor: BRAND }}
+              >
+                Unlock Multiple Formats
+              </button>
+              <button
+                type="button"
+                onClick={declineUpgrade}
+                className="w-full rounded-md border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:border-slate-300 transition"
+              >
+                Continue with One Format
+              </button>
+            </div>
+            <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-slate-500">
+              <Lock className="h-3.5 w-3.5" /> Secure payment. Your details are never stored.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
