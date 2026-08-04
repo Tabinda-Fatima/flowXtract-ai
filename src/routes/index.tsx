@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ExtractionForm } from "@/components/ExtractionForm";
+import { ExtractionPreview } from "@/components/ExtractionPreview";
 import { useState } from "react";
 import {
   User,
@@ -124,7 +124,7 @@ function Hero() {
               New Extraction Task
             </span>
           </div>
-          <ExtractionForm bare showTrust={false} />
+          <ExtractionPreview />
         </div>
       </div>
     </section>
