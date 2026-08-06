@@ -67,6 +67,7 @@ export function ExtractionForm({
   const [showProgress, setShowProgress] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [stepsDone, setStepsDone] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -83,19 +84,19 @@ export function ExtractionForm({
   useEffect(() => {
     if (!showProgress) return;
     setActiveStep(0);
+    setStepsDone(false);
     const timers = STEPS.map((_, i) =>
       window.setTimeout(() => setActiveStep(i), i * STEP_MS)
+    );
+    timers.push(
+      window.setTimeout(() => setStepsDone(true), STEPS.length * STEP_MS)
     );
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [showProgress]);
 
-  function toggleFormat(value: string) {
+  function selectFormat(value: string) {
     // Single format is free. Selecting a second one requires payment (not connected yet).
-    if (outputFormats.includes(value)) {
-      if (outputFormats.length === 1) return; // keep at least one selected
-      setOutputFormats((prev) => prev.filter((f) => f !== value));
-      return;
-    }
+    if (outputFormats.includes(value)) return;
     if (outputFormats.length >= 1) {
       setUpgradeNotice(null);
       setUpgradeOpen(true);
@@ -103,6 +104,11 @@ export function ExtractionForm({
     }
     setOutputFormats([value]);
   }
+
+  function deselectFormat(value: string) {
+    setOutputFormats((prev) => prev.filter((f) => f !== value));
+  }
+
 
   function confirmUpgrade() {
     setUpgradeNotice("Payment integration is coming soon.");
