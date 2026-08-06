@@ -119,6 +119,21 @@ export function ExtractionForm({
     setUpgradeOpen(false);
   }
 
+  function resetForm() {
+    setUrl("");
+    setDescription("");
+    setEmail("");
+    setOutputFormats([]);
+    setErrors({});
+    setSubmitError(null);
+    setShowProgress(false);
+    setSucceeded(false);
+    setActiveStep(0);
+    setStepsDone(false);
+    setSubmitting(false);
+  }
+
+
   function validate() {
     const e: { url?: string; description?: string; email?: string; formats?: string } = {};
     if (!url.trim()) e.url = "Website URL is required.";
@@ -332,6 +347,13 @@ export function ExtractionForm({
                 </p>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="mt-4 w-full rounded-md border border-slate-200 py-2.5 text-sm font-semibold text-slate-700 hover:border-slate-300 transition"
+            >
+              Send Another Request
+            </button>
           </div>
         )}
 
