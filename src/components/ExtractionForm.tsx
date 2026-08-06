@@ -26,6 +26,7 @@ const FORMATS = [
 ];
 
 const STEPS = [
+  "Processing...",
   "Website Analyzer Agent working...",
   "Scraper Agent extracting data...",
   "Data Cleaner Agent organizing results...",
@@ -33,7 +34,7 @@ const STEPS = [
   "Sending results to your email...",
 ];
 
-const STEP_MS = 25000; // 5 steps => ~2 minutes
+const STEP_MS = 20000; // 6 steps => ~2 minutes
 
 function shortLabel(value: string) {
   const f = FORMATS.find((x) => x.value === value);
