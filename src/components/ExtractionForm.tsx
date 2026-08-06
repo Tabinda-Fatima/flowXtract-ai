@@ -26,6 +26,7 @@ const FORMATS = [
 ];
 
 const STEPS = [
+  "Processing...",
   "Website Analyzer Agent working...",
   "Scraper Agent extracting data...",
   "Data Cleaner Agent organizing results...",
@@ -33,7 +34,7 @@ const STEPS = [
   "Sending results to your email...",
 ];
 
-const STEP_MS = 25000; // 5 steps => ~2 minutes
+const STEP_MS = 20000; // 6 steps => ~2 minutes
 
 function shortLabel(value: string) {
   const f = FORMATS.find((x) => x.value === value);
@@ -51,7 +52,7 @@ export function ExtractionForm({
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
-  const [outputFormats, setOutputFormats] = useState<string[]>(["gsheet"]);
+  const [outputFormats, setOutputFormats] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeNotice, setUpgradeNotice] = useState<string | null>(null);
@@ -66,6 +67,7 @@ export function ExtractionForm({
   const [showProgress, setShowProgress] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [stepsDone, setStepsDone] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -82,19 +84,19 @@ export function ExtractionForm({
   useEffect(() => {
     if (!showProgress) return;
     setActiveStep(0);
+    setStepsDone(false);
     const timers = STEPS.map((_, i) =>
       window.setTimeout(() => setActiveStep(i), i * STEP_MS)
+    );
+    timers.push(
+      window.setTimeout(() => setStepsDone(true), STEPS.length * STEP_MS)
     );
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [showProgress]);
 
-  function toggleFormat(value: string) {
+  function selectFormat(value: string) {
     // Single format is free. Selecting a second one requires payment (not connected yet).
-    if (outputFormats.includes(value)) {
-      if (outputFormats.length === 1) return; // keep at least one selected
-      setOutputFormats((prev) => prev.filter((f) => f !== value));
-      return;
-    }
+    if (outputFormats.includes(value)) return;
     if (outputFormats.length >= 1) {
       setUpgradeNotice(null);
       setUpgradeOpen(true);
@@ -102,6 +104,11 @@ export function ExtractionForm({
     }
     setOutputFormats([value]);
   }
+
+  function deselectFormat(value: string) {
+    setOutputFormats((prev) => prev.filter((f) => f !== value));
+  }
+
 
   function confirmUpgrade() {
     setUpgradeNotice("Payment integration is coming soon.");
@@ -240,7 +247,8 @@ export function ExtractionForm({
                     type="button"
                     role="option"
                     aria-selected={selected}
-                    onClick={() => toggleFormat(f.value)}
+                    onClick={() => selectFormat(f.value)}
+                    onDoubleClick={() => deselectFormat(f.value)}
                     className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-slate-50"
                   >
                     <span>
@@ -295,60 +303,50 @@ export function ExtractionForm({
           )}
         </button>
 
-        {showProgress && (
-          <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4 space-y-3 animate-in fade-in duration-300">
-            <p className="text-xs font-bold tracking-wider text-slate-700">
-              PROCESSING YOUR EXTRACTION
-            </p>
-            <ol className="space-y-2">
-              {STEPS.map((step, i) => {
-                const done = i < activeStep;
-                const active = i === activeStep;
-                return (
-                  <li
-                    key={step}
-                    className={`flex items-center gap-3 rounded-md border px-3 py-2 text-sm transition-all duration-300 ${
-                      active
-                        ? "border-blue-200 bg-blue-50 text-slate-900"
-                        : done
-                          ? "border-slate-200 bg-white text-slate-700"
-                          : "border-slate-200 bg-white text-slate-400"
-                    }`}
-                  >
-                    {done ? (
-                      <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: BRAND }} />
-                    ) : active ? (
-                      <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: BRAND }} />
-                    ) : (
-                      <span className="h-4 w-4 shrink-0 rounded-full border border-slate-300" />
-                    )}
-                    <span className="font-medium">{step}</span>
-                  </li>
-                );
-              })}
-            </ol>
-            {succeeded && (
-              <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm text-slate-800 animate-in fade-in duration-300">
-                <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" style={{ color: BRAND }} />
-                <span>
-                  Your request has been submitted successfully. Your selected output format(s) will
-                  be delivered to your email shortly.
-                </span>
-              </div>
-            )}
+        {showProgress && !(stepsDone && succeeded) && (
+          <div
+            key={activeStep}
+            className="flex items-center gap-2.5 text-sm text-slate-600 animate-in fade-in duration-500"
+            role="status"
+            aria-live="polite"
+          >
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: BRAND }} />
+            <span className="font-medium">{STEPS[activeStep]}</span>
           </div>
         )}
 
-        <div className="border-t border-slate-200 pt-4 space-y-2">
-          <p className="flex items-start gap-2 text-xs text-slate-600">
-            <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-            We'll send your selected output formats to your email once processing is complete.
-          </p>
-          <p className="flex items-start gap-2 text-xs italic text-slate-500">
-            <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-            Your email will only be used to deliver your extraction results.
-          </p>
-        </div>
+        {stepsDone && succeeded && (
+          <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 animate-in fade-in duration-300">
+            <div className="flex items-start gap-2.5">
+              <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" style={{ color: BRAND }} />
+              <div>
+                <p className="text-sm font-bold text-slate-900">
+                  Your Request Has Been Submitted
+                </p>
+                <p className="mt-1 text-sm text-slate-700">
+                  Your extraction request has been submitted successfully. Your selected output
+                  format(s) will be delivered to your email shortly.
+                </p>
+                <p className="mt-2 text-xs text-slate-500">
+                  Please allow a few minutes for processing. Thank you for using flowXtract.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!showProgress && (
+          <div className="border-t border-slate-200 pt-4 space-y-2">
+            <p className="flex items-start gap-2 text-xs text-slate-600">
+              <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+              We'll send your selected output formats to your email once processing is complete.
+            </p>
+            <p className="flex items-start gap-2 text-xs italic text-slate-500">
+              <Lock className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
+              Your email will only be used to deliver your extraction results.
+            </p>
+          </div>
+        )}
       </form>
       {showTrust && <TrustLabels />}
 
