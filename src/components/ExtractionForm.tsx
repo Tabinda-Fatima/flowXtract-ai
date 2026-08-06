@@ -347,6 +347,13 @@ export function ExtractionForm({
                 </p>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="mt-4 w-full rounded-md border border-slate-200 py-2.5 text-sm font-semibold text-slate-700 hover:border-slate-300 transition"
+            >
+              Send Another Request
+            </button>
           </div>
         )}
 
