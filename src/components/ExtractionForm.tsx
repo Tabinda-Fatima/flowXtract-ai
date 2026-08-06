@@ -119,6 +119,21 @@ export function ExtractionForm({
     setUpgradeOpen(false);
   }
 
+  function resetForm() {
+    setUrl("");
+    setDescription("");
+    setEmail("");
+    setOutputFormats([]);
+    setErrors({});
+    setSubmitError(null);
+    setShowProgress(false);
+    setSucceeded(false);
+    setActiveStep(0);
+    setStepsDone(false);
+    setSubmitting(false);
+  }
+
+
   function validate() {
     const e: { url?: string; description?: string; email?: string; formats?: string } = {};
     if (!url.trim()) e.url = "Website URL is required.";
