@@ -52,7 +52,7 @@ export function ExtractionForm({
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
-  const [outputFormats, setOutputFormats] = useState<string[]>(["gsheet"]);
+  const [outputFormats, setOutputFormats] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [upgradeNotice, setUpgradeNotice] = useState<string | null>(null);
