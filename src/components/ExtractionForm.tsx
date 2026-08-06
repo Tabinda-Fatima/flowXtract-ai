@@ -321,14 +321,14 @@ export function ExtractionForm({
               <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" style={{ color: BRAND }} />
               <div>
                 <p className="text-sm font-bold text-slate-900">
-                  Your Request Has Been Submitted
+                  Your Extraction Is on Its Way!
                 </p>
                 <p className="mt-1 text-sm text-slate-700">
-                  Your extraction request has been submitted successfully. Your selected output
-                  format(s) will be delivered to your email shortly.
+                  Your request has been processed successfully. We’re preparing your selected
+                  file(s), and they’ll arrive in your inbox shortly.
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
-                  Please allow a few minutes for processing. Thank you for using flowXtract.
+                  Thank you for choosing flowXtract.
                 </p>
               </div>
             </div>
