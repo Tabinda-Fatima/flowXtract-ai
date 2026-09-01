@@ -14,8 +14,8 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { submitExtraction } from "@/lib/extraction.functions";
 
-const WEBHOOK_URL = "https://tabindaf66.app.n8n.cloud/webhook/dataextract-ai";
 const BRAND = "#1e40af";
 
 const FORMATS = [
