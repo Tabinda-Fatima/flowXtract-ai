@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 
-const WEBHOOK_URL = "https://haseebtabi01.app.n8n.cloud/webhook/dataextract-ai";
+const WEBHOOK_URL = "https://tabindaf66.app.n8n.cloud/webhook/dataextract-ai";
 const BRAND = "#1e40af";
 
 const FORMATS = [
