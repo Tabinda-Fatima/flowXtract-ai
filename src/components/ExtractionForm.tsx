@@ -14,8 +14,8 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { submitExtraction } from "@/lib/extraction.functions";
 
-const WEBHOOK_URL = "https://tabindaf66.app.n8n.cloud/webhook/dataextract-ai";
 const BRAND = "#1e40af";
 
 const FORMATS = [
@@ -157,20 +157,14 @@ export function ExtractionForm({
     setSubmitting(true);
     setShowProgress(true);
     try {
-      const res = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-        body: JSON.stringify({
+      await submitExtraction({
+        data: {
           url: url.trim(),
           description: description.trim(),
           email: email.trim(),
           outputFormats,
-        }),
+        },
       });
-      if (!res.ok) throw new Error("Request failed");
       setSucceeded(true);
     } catch {
       setSubmitError("Unable to submit your request. Please try again.");
